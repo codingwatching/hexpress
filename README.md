@@ -24,11 +24,11 @@ Free-form layout allows placing any number of circular zones that act as note tr
 
 # Design & architecture
 
-Hexpress runs on Android & desktop versions of LÖVE framework. LÖVE is an *awesome* framework for 2D games, which also makes it decent fit for implementing musical instruments.
+Hexpress runs on Android & desktop versions of [LÖVE framework](https://love2d.org/). LÖVE is an *awesome* framework for 2D games, which also makes it decent fit for implementing musical instruments.
 
 LÖVE uses openal-soft library for cross-platform audio. It supports spatial audio, real-time effects (reverb, chorus, distortion, echo, flanger, modulator, compressor, equalizer), and sound capture. It's not meant for professional music applications, but so far it's proven to be effective for the needed scope. Recently the LÖVE Android port started using Oboe which enables low-latency audio across many devices.
 
-The released Hexpress app makes some modifications to LÖVE framework code. The framework code and Android building environment is currently not included in this repository because of maintainability problems. It is almost identical to official [LÖVE for Android] app, with differences being app icon and name. Please open an issue if hosting app is of any interest. The code from this repo can be used with official [LÖVE for Android app](https://play.google.com/store/apps/details?id=org.love2d.android).
+The released Hexpress app makes some modifications to LÖVE framework code. The framework code and Android building environment is currently not included in this repository because of maintainability problems.
 
 Hexpress supports any number of virtual instruments. Several instruments are provided in *patches* subdirectory. When application starts, a `selector.lua` module scans for patches and presents them to user for selection. For this purpose, patch contains `icon()` function that is called each frame by selector to render representation of patch to user. Once a patch is selected, it starts executing in place of selector module. The phone's *back* button unloads current patch and returns execution to selector.
 
