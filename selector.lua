@@ -6,7 +6,8 @@ local selector = {}
 local colorScheme = {
   background = {l.rgba(0x2d2734ff)},
   frame      = {l.rgba(0xffffff22)},
-  shadow     = {l.rgba(0x00000040)}
+  shadow     = {l.rgba(0x00000040)},
+  door       = {l.rgba(0xd5ceacff)},
 }
 
 require('autotable')
@@ -17,6 +18,38 @@ local scale = 0    -- fit about this many icons along vertical screen space
 
 local patches = {}
 
+local exitDoorPlacement = {x = -1.65, y = 0.8}
+
+local function exitDoorDraw()
+  local t = love.timer.getTime()
+  local shear = 0.1 + 0.1 * math.cos(2*t)
+  local hinge = 0.03
+  local width = 1
+  local height = 1.6
+  local ajar = width - 2 * hinge - 0.6 * shear
+  love.graphics.push()
+  love.graphics.translate(exitDoorPlacement.x, exitDoorPlacement.y)
+  love.graphics.scale(0.1)
+  love.graphics.translate(-width / 2, -height / 2)
+  love.graphics.setColor(colorScheme.door)
+  love.graphics.rectangle('fill', 0, 0, width, height, 0.15)
+  love.graphics.shear(0, shear)
+  love.graphics.setColor(colorScheme.background)
+  love.graphics.rectangle('fill', hinge, hinge, ajar, height * 0.6, 0.1)
+  love.graphics.shear(0, -2 * shear)
+  love.graphics.rectangle('fill', hinge, height * 0.38, ajar, height * 0.6, 0.1)
+  love.graphics.setColor(colorScheme.door)
+  love.graphics.shear(0, shear)
+  love.graphics.ellipse('fill', ajar * 0.8, 0.7, 0.08, 0.03)
+  love.graphics.pop()
+end
+
+local function exitDoorTouch(x, y)
+  local x, y = love.graphics.inverseTransformPoint(x, y)
+  if math.abs(x - exitDoorPlacement.x) < 0.1 and math.abs(y - exitDoorPlacement.y) < 0.1 then
+    love.event.quit()
+  end
+end
 
 function selector.load()
   love.graphics.setBackgroundColor(colorScheme.background)
@@ -54,10 +87,12 @@ function selector.load()
 end
 
 function selector.checkTouch(x, y)
+  exitDoorTouch(x, y)
   love.graphics.push()
   love.graphics.scale(scale)
   x, y = love.graphics.inverseTransformPoint(x, y)
   love.graphics.pop()
+
   local q, r = hexgrid.pixelToHex(x, y)
 
   if hexgrid.distanceFromCenter(q,r) < radius + 1 then
@@ -83,6 +118,7 @@ function selector:process(s)
 end
 
 function selector:draw(s)
+  exitDoorDraw()
   for q, t in pairs(patches) do
     for r, patch in pairs(t) do
       local x, y = hexgrid.hexToPixel(q, r)
@@ -117,7 +153,6 @@ function selector:draw(s)
   end
   --selector.drawLogo(s.tilt.lp)
 end
-
 
 -- if patch doesn't have icon, use single color unique to patch name
 function selector.defaultIcon(q, r)

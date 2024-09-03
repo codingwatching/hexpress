@@ -29,10 +29,10 @@ function love.load()
 end
 
 
-function transform()
+local function transform()
   -- use same set of transformations in both draw() and update() functions
   -- it's extracted here because if they diverge, it takes time to detect and debug
-  -- set (0,0) to screen center and 1 unit to half-screen hight
+  -- set (0,0) to screen center and 1 unit to half-screen height
   love.graphics.translate(sw / 2, sh / 2)
   love.graphics.scale(sh / 2, sh / 2)
 end
@@ -85,9 +85,7 @@ end
 
 function love.keypressed(key)
   if key == 'escape' then
-    if patch == selector then
-      love.event.quit()
-    else
+    if patch ~= selector then
       loadPatch(selector)
       love.audio.stop()
     end
