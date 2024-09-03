@@ -9,24 +9,25 @@ fretboard.neckHeight = 0.98  -- with 1.0 being half-screen height
 fretboard.neckWidth = 4
 fretboard.fretWidth = 0.4
 
+local tuning_presets = {
+  ['EBGDAE'] = {-21, -16, -11,  -6, -2, 3}, -- standard guitar
+  ['EBGDAD'] = {-22, -15, -10,  -5, -1, 4}, -- dropped D guitar
+  ['DBGDGD'] = {-20, -15, -10,  -5, -1, 4}, -- open G guitar
+  ['GDAE']   = {-32, -27, -22, -17},        -- bass
+  ['EADG']   = {-17, -10,  -3,   4},        -- violin
+}
+
+
 function fretboard.load()
 end
 
-function fretboard.new(displayNoteNames, tuning)
+function fretboard.new(options)
+  options = options or { tuning_preset='EBGDAE', tuning_table={}, skipDrawingEdgeFrets=false }
   -- tuning names are from highest to lowest pitch, but note index tables
   -- are from lowest to highest (a bit confusing)
-  local tuning_presets = {
-    ['EBGDAE'] = {-20, -15, -10,  -5, -1, 4}, -- standard guitar
-    ['EBGDAD'] = {-22, -15, -10,  -5, -1, 4}, -- dropped D guitar
-    ['DBGDGD'] = {-20, -15, -10,  -5, -1, 4}, -- open G guitar
-    ['GDAE']   = {-32, -27, -22, -17},         -- bass
-    ['EADG']   = {-17, -10,  -3,   4},         -- violin
-  }
-  if type(tuning) == 'string' then
-    tuning = tuning_presets[tuning]
-  end
+  local tuning_table = options.tuning_preset and tuning_presets[options.tuning_preset] or options.tuning_table
   local self = setmetatable({
-    strings = tuning or tuning_presets['EBGDAE'], -- list of note indexes across strings
+    strings = tuning_table, -- list of note indexes across strings
     activeNotes   = {},
     colorScheme = {
       neck    = {l.rgba(0x2f2c26ff)},
@@ -42,9 +43,18 @@ function fretboard.new(displayNoteNames, tuning)
   for string = 1, #self.strings do
     for fret = 0, 10 do
       if self:toNoteIndex(fret, string) % 12 == 0 then
-        table.insert(self.cNotePositions,  {self:toX(fret), self:toY(string)})
+        local x, y = self:toX(fret), self:toY(string)
+        if x > -2 and x < 2 then
+          table.insert(self.cNotePositions,  {x, y})
+        end
       end
     end
+  end
+  self.lowerFretLimit = -self.neckWidth/2
+  self.higherFretLimit = self.neckWidth/2
+  if (options.skipDrawingEdgeFrets) then
+    self.lowerFretLimit = self.lowerFretLimit + fretboard.fretWidth
+    self.higherFretLimit = self.higherFretLimit - fretboard.fretWidth
   end
   return self
 end
@@ -108,7 +118,7 @@ function fretboard:draw(s)
 
   -- draw frets
   love.graphics.setLineWidth(0.125 * self.fretWidth)
-  for toX = -self.neckWidth/2, self.neckWidth/2, self.fretWidth do
+  for toX = self.lowerFretLimit, self.higherFretLimit, self.fretWidth do
     love.graphics.setColor(self.colorScheme.shade)
     love.graphics.line(toX + 0.05, -self.neckHeight, toX + 0.05, self.neckHeight)
     love.graphics.setColor(self.colorScheme.fret)

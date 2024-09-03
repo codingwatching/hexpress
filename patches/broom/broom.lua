@@ -18,7 +18,7 @@ local colorScheme = {
 
 function patch.load()
   local self = setmetatable({}, patch)
-  self.layout = fretboard.new(false, {-29, -24, -19, -14, -9, -4, 1, 6})
+  self.layout = fretboard.new{ tuning_table={-29, -24, -19, -14, -9, -4, 1, 6} }
   self.layout.fretWidth = 0.4
   self.sampler  = sampler.new({
     {path='patches/broom/acbass_A21.ogg', note = notes.toIndex['A2']},

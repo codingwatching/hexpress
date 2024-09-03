@@ -18,7 +18,7 @@ local colorScheme = {
 
 function patch.load()
   local self = setmetatable({}, patch)
-  self.layout = fretboard.new(false, 'EBGDAE')
+  self.layout = fretboard.new{ tuning_preset='EBGDAE', skipDrawingEdgeFrets=true }
   self.clean = sampler.new({
     {path='patches/guitar/clean-e1st-str-pluck.ogg',  note =  4},
     {path='patches/guitar/clean-g-str-pluck.ogg',     note = -5},
@@ -101,6 +101,9 @@ function patch:draw(s)
   -- draw nut
   local fretX = -0.4 * 4
   love.graphics.setLineWidth(0.09)
+  love.graphics.setColor(colorScheme.fret)
+  local offX = 0.02 -- nut shadow
+  love.graphics.line(fretX - offX, -self.layout.neckHeight * 1.01, fretX - offX, self.layout.neckHeight * 1.01)
   love.graphics.setColor(colorScheme.nut)
   love.graphics.line(fretX, -self.layout.neckHeight * 1.01, fretX, self.layout.neckHeight * 1.01)
   -- dots

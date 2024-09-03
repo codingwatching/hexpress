@@ -18,7 +18,7 @@ local colorScheme = {
 
 function patch.load()
   local self = setmetatable({}, patch)
-  self.layout = fretboard.new(false, {-47, -42, -37, -32, -27, -22, -17, -12})
+  self.layout = fretboard.new{ tuning_table={-47, -42, -37, -32, -27, -22, -17, -12} }
   self.layout.fretWidth = 0.4
 
   self.sampler = sampler.new({
