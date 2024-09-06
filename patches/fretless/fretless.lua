@@ -48,7 +48,6 @@ end
 
 function patch:process(s)
   self.layout:interpret(s)
-  self.efx.reverb.decaytime = l.remap(s.tilt.lp[2], -.1, 2, 0.5, 2)
   self.efx:process()
   self.sampler:processTouches(s.dt, s.touches, self.efx)
 end

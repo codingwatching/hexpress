@@ -63,7 +63,6 @@ function patch:process(s)
     touch.velocity = l.remap(s.tilt[1], -0.2, 0.2, 0.1, 0.9, 'clamp')
   end
   self.layout:interpret(s)
-  self.efx.reverb.decaytime = l.remap(s.tilt.lp[2], 1, -1, 1, 5)
   self.efx:process()
   self.sampler:processTouches(s.dt, s.touches, self.efx)
 end

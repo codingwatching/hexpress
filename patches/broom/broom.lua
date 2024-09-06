@@ -43,7 +43,6 @@ end
 
 function patch:process(s)
   self.layout:interpret(s)
-  self.efx.reverb.decaytime = l.remap(s.tilt.lp[2], 0.7, -0.1, 0.2, 2.0, 'clamp')
   self.sampler.envelope.release = l.remap(s.tilt[2], .0, -0.2, 0.05, 5, 'clamp') -- sustain pedal
   self.efx:process()
   self.sampler:processTouches(s.dt, s.touches, self.efx)

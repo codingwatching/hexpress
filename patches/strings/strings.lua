@@ -68,7 +68,6 @@ function patch:process(s)
   self.tremolo.envelope.attack  = l.remap(s.tilt.lp[2], 0.0, -0.9, 0.0, 10, 'clamp')
   self.cello.envelope.release   = l.remap(s.tilt.lp[2], -0.05, -0.2, 0.6, 4, 'clamp')
   self.tremolo.envelope.release = l.remap(s.tilt.lp[2], -0.05, -0.2, 0.5, 2, 'clamp')
-  self.efx.reverb.decaytime     = l.remap(s.tilt.lp[2], 0.0, -0.9, 1.0, 8.0, 'clamp')
   -- crossfade between instruments
   self.cello.masterVolume   = l.remap(s.tilt.lp[1], -0.2, 0.3, 1, 0.2, 'clamp')
   self.tremolo.masterVolume = l.remap(s.tilt.lp[1], -0.1, 0.4, 0.2, 1, 'clamp')
