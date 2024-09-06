@@ -26,11 +26,11 @@ local bufferSize = 16384
 function patch.load()
   local self = setmetatable({}, patch)
   self.hexpad = hexpad.new(false, 0, 3)
-  self.fretboard = fretboard.new(false, {-12})
+  self.fretboard = fretboard.new{ tuning_table={-12} }
   self.fretboard.neckHeight = 0.25
   self.fretboard.fretWidth  = 0.15
 
-  self.pitchboard = fretboard.new(false, {-48})
+  self.pitchboard = fretboard.new{ tuning_table={-48} }
   self.pitchboard.neckHeight = 0.2
   self.pitchboard.fretWidth  = 0.04
 
